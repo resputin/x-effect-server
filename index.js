@@ -22,7 +22,7 @@ app.use(
 
 app.use(express.json());
 
-app.get('/', (req, res, next) => {
+app.get('/api', (req, res, next) => {
   Card.find()
     .then(response => {
       res.json(response);
@@ -32,7 +32,7 @@ app.get('/', (req, res, next) => {
     });
 });
 
-app.post('/cards', (req, res, next) => {
+app.post('/api/cards', (req, res, next) => {
   if (!req.body.name) {
     const err = new Error('Must include name');
     err.status = 400;
@@ -54,7 +54,7 @@ app.post('/cards', (req, res, next) => {
     .catch(next);
 });
 
-app.put('/cards/:id', (req, res, next) => {
+app.put('/api/cards/:id', (req, res, next) => {
   if (req.body.id !== req.params.id) {
     const err = new Error('Id must match in body and url params');
     err.status = 400;

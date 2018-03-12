@@ -6,7 +6,7 @@ const morgan = require('morgan');
 const app = express();
 const { Card } = require('./models/card');
 const mongoose = require('mongoose');
-const { MONGODB_URI, PORT } = require('./config');
+const { MONGODB_URI, PORT, CLIENT_ORIGIN } = require('./config');
 
 app.use(
   morgan(process.env.NODE_ENV === 'production' ? 'common' : 'dev', {
@@ -14,11 +14,11 @@ app.use(
   })
 );
 
-// app.use(
-//   cors({
-//     origin: CLIENT_ORIGIN
-//   })
-// );
+app.use(
+  cors({
+    origin: CLIENT_ORIGIN
+  })
+);
 
 app.use(express.json());
 

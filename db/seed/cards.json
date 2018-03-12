@@ -1,0 +1,10 @@
+[
+  {
+    "name": "Run every day",
+    "xArray": [true]
+  },
+  {
+    "name": "Eat Healthy",
+    "xArray": [true, true, false]
+  }
+]

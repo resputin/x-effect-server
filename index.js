@@ -9,6 +9,7 @@ const mongoose = require('mongoose');
 const { MONGODB_URI, PORT, CLIENT_ORIGIN } = require('./config');
 const cardRouter = require('./routes/cards');
 const cardEventRouter = require('./routes/cardEvents');
+const checkExpiration = require('./models/helpers/card-event-helper');
 
 app.use(
   morgan(process.env.NODE_ENV === 'production' ? 'common' : 'dev', {
@@ -61,6 +62,7 @@ if (require.main === module) {
 
   app
     .listen(PORT, function() {
+      setInterval(() => checkExpiration(), 15000 );
       console.info(`Server listening on ${this.address().port}`);
     })
     .on('error', err => {

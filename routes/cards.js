@@ -9,7 +9,7 @@ const mongoose = require('mongoose');
 const moment = require('moment');
 
 router.get('/api', (req, res, next) => {
-  Card.find()
+  Card.find().populate('cardEvents')
     .then(response => {
       res.json(response);
     })

@@ -5,7 +5,8 @@ const mongoose = require('mongoose');
 const cardSchema = mongoose.Schema({
   name: { type: String, required: true },
   created: { type: Date, default: Date.now() },
-  xArray: { type: Array, default: [] }
+  xArray: { type: Array, default: [] },
+  cardEvents: [{ type: mongoose.Schema.Types.ObjectId, ref: 'CardEvent'}]
 });
 
 cardSchema.set('toObject', {

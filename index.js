@@ -7,6 +7,9 @@ const app = express();
 const { Card } = require('./models/card');
 const mongoose = require('mongoose');
 const { MONGODB_URI, PORT, CLIENT_ORIGIN } = require('./config');
+const cardRouter = require('./routes/cards');
+const cardEventRouter = require('./routes/cardEvents');
+const checkExpiration = require('./models/helpers/card-event-helper');
 
 app.use(
   morgan(process.env.NODE_ENV === 'production' ? 'common' : 'dev', {
@@ -22,84 +25,8 @@ app.use(
 
 app.use(express.json());
 
-app.get('/api', (req, res, next) => {
-  Card.find()
-    .then(response => {
-      res.json(response);
-    })
-    .catch(err => {
-      next(err);
-    });
-});
-
-app.post('/api/cards', (req, res, next) => {
-  if (!req.body.name) {
-    const err = new Error('Must include name');
-    err.status = 400;
-    return next(err);
-  }
-
-  const newCard = {
-    name: req.body.name
-  };
-
-  Card.create(newCard)
-    .then(response => {
-      if (response) {
-        res.json(response);
-      } else {
-        next();
-      }
-    })
-    .catch(next);
-});
-
-app.put('/api/cards/:id', (req, res, next) => {
-  if (req.body.id !== req.params.id) {
-    const err = new Error('Id must match in body and url params');
-    err.status = 400;
-    return next(err);
-  }
-
-  const acceptedFields = ['name'];
-  const updateCard = {};
-  for (let field in acceptedFields) {
-    if (req.body[field]) {
-      updateCard[field] = req.body[field];
-    }
-  }
-
-  if (req.body.xArray) {
-    Card.findById(req.params.id)
-      .then(response => {
-        updateCard.xArray = [...response.xArray, req.body.xArray];
-        console.log(updateCard);
-        return Card.findByIdAndUpdate(req.params.id, updateCard, { new: true });
-      })
-      .then(response => {
-        console.log(response);
-        if (response) {
-          res.json(response);
-        } else {
-          console.log('here');
-          next();
-        }
-      })
-      .catch(next);
-  } else {
-    Card.findByIdAndUpdate(req.params.id, updateCard, { new: true })
-      .then(response => {
-        if (response) {
-          res.json(response);
-        } else {
-          next();
-        }
-      })
-      .catch(next);
-  }
-
-  
-});
+app.use('/api/cards', cardRouter);
+app.use('/api/cardEvents', cardEventRouter);
 
 app.use(function(req, res, next) {
   const err = new Error('Not Found');
@@ -135,6 +62,7 @@ if (require.main === module) {
 
   app
     .listen(PORT, function() {
+      setInterval(() => checkExpiration(), 15000 );
       console.info(`Server listening on ${this.address().port}`);
     })
     .on('error', err => {

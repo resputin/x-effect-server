@@ -8,7 +8,7 @@ const { CardEvent } = require('../models/card-event');
 const mongoose = require('mongoose');
 const moment = require('moment');
 
-router.get('/api', (req, res, next) => {
+router.get('/api/cards', (req, res, next) => {
   Card.find().populate('cardEvents')
     .then(response => {
       res.json(response);

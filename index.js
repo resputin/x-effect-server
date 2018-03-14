@@ -141,3 +141,24 @@ if (require.main === module) {
       console.error(err);
     });
 }
+
+/**
+ * start timer loop with setInterval after app starts up
+ * setInterval on a short timer to check buisness logic
+ * 
+ * card: {
+ *  name:
+ *  createdAt:
+ *  xArray: [true, false, true, undecided] => [true, false, true, false, undecided]
+ *  hasNotChecked: true
+ * }
+ * 
+ * get all events, that expire today, and are undecided
+ * get all events for a card
+ * 
+ * notification tied to this same event add needsNotification
+ * 
+ * "NOT_CHECKED"
+ * "MISSED"
+ * "COMPLETED"
+ */

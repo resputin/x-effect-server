@@ -8,7 +8,7 @@ const { CardEvent } = require('../models/card-event');
 const mongoose = require('mongoose');
 const moment = require('moment');
 
-router.get('/api/cards', (req, res, next) => {
+router.get('/', (req, res, next) => {
   Card.find().populate('cardEvents')
     .then(response => {
       res.json(response);
@@ -18,7 +18,7 @@ router.get('/api/cards', (req, res, next) => {
     });
 });
 
-router.post('/api/cards', (req, res, next) => {
+router.post('/', (req, res, next) => {
   if (!req.body.name) {
     const err = new Error('Must include name');
     err.status = 400;
@@ -63,7 +63,7 @@ router.post('/api/cards', (req, res, next) => {
     .catch(next);
 });
 
-router.put('/api/cards/:id', (req, res, next) => {
+router.put('/:id', (req, res, next) => {
   if (req.body.id !== req.params.id) {
     const err = new Error('Id must match in body and url params');
     err.status = 400;

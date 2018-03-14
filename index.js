@@ -8,6 +8,7 @@ const { Card } = require('./models/card');
 const mongoose = require('mongoose');
 const { MONGODB_URI, PORT, CLIENT_ORIGIN } = require('./config');
 const cardRouter = require('./routes/cards');
+const cardEventRouter = require('./routes/cardEvents');
 
 app.use(
   morgan(process.env.NODE_ENV === 'production' ? 'common' : 'dev', {
@@ -23,7 +24,8 @@ app.use(
 
 app.use(express.json());
 
-app.use('/', cardRouter);
+app.use('/api/cards', cardRouter);
+app.use('/api/cardEvents', cardEventRouter);
 
 app.use(function(req, res, next) {
   const err = new Error('Not Found');

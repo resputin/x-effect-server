@@ -2,13 +2,13 @@
 
 const mongoose = require('mongoose');
 
-const eventSchema = mongoose.Schema({
+const cardEventSchema = mongoose.Schema({
   status: {type: String, default: 'NOT_CHECKED'},
   expires: Date,
   cardId: {type: mongoose.Schema.Types.ObjectId, ref: 'Card', required: true}
 });
 
-eventSchema.set('toObject', {
+cardEventSchema.set('toObject', {
   transform: function(doc, ret) {
     ret.id = ret._id;
     delete ret._id;
@@ -16,5 +16,5 @@ eventSchema.set('toObject', {
   }
 });
 
-const Event = mongoose.model('Event', eventSchema);
-module.exports = { Event };
+const CardEvent = mongoose.model('CardEvent', cardEventSchema);
+module.exports = { CardEvent };

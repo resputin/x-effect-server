@@ -4,7 +4,7 @@ const express = require('express');
 // Create an router instance (aka "mini-router")
 const router = express.Router();
 const { Card } = require('../models/card');
-const { Event } = require('../models/event');
+const { CardEvent } = require('../models/card-event');
 const mongoose = require('mongoose');
 const moment = require('moment');
 
@@ -31,11 +31,34 @@ router.post('/api/cards', (req, res, next) => {
 
   Card.create(newCard)
     .then(response => {
+      const created = moment(response.created);
+      const cardId = response.id;
+      const eventPromises = [];
+      for (let i = 0; i < 49; i++) {
+        eventPromises.push(
+          CardEvent.create({
+            cardId,
+            expires: created.startOf('day').add(1, 'days')
+          })
+        );
+      }
+      return Promise.all(eventPromises);
+    })
+    .then(response => {
+      let eventIds = response.map(event => event.id);
+      console.log(eventIds);
+      return Card.findByIdAndUpdate(response[0].cardId, {cardEvents: eventIds});
+    })
+    .then(response => {
+      console.log(response);
       if (response) {
-        res.json(response);
+        return Card.findById(response.id).populate('cardEvents');
       } else {
         next();
       }
+    })
+    .then(response => {
+      res.status(201).json(response);
     })
     .catch(next);
 });

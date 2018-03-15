@@ -29,7 +29,8 @@ router.post('/', (req, res, next) => {
   }
 
   const newCard = {
-    name: req.body.name
+    name: req.body.name,
+    userId: req.user.id
   };
 
   Card.create(newCard)

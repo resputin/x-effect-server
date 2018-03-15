@@ -1,5 +1,5 @@
 'use strict';
-
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
@@ -7,11 +7,6 @@ const app = express();
 const passport = require('passport');
 const mongoose = require('mongoose');
 const { MONGODB_URI, PORT, CLIENT_ORIGIN } = require('./config');
-const cardRouter = require('./routes/cards');
-const cardEventRouter = require('./routes/cardEvents');
-const usersRouter = require('./routes/users');
-const authRouter = require('./routes/auth');
-const checkExpiration = require('./models/helpers/card-event-helper');
 
 app.use(
   morgan(process.env.NODE_ENV === 'production' ? 'common' : 'dev', {
@@ -32,10 +27,13 @@ passport.use(jwtStrategy);
 
 app.use(express.json());
 
-app.use('', usersRouter);
-app.use('', authRouter);
+const cardRouter = require('./routes/cards');
+const cardEventRouter = require('./routes/cardEvents');
+const usersRouter = require('./routes/users');
+const authRouter = require('./routes/auth');
 
-app.use(passport.authenticate('jwt', { session: false, failWithError: true }));
+app.use('/api', usersRouter);
+app.use('/api', authRouter);
 
 app.use('/api/cards', cardRouter);
 app.use('/api/cardEvents', cardEventRouter);
@@ -49,13 +47,15 @@ app.use(function(req, res, next) {
 // Catch-all Error handler
 // Add NODE_ENV check to prevent stacktrace leak
 app.use(function(err, req, res, next) {
-  console.log('getting here for some reason');
+  console.log(err);
   res.status(err.status || 500);
   res.json({
     message: err.message,
     error: app.get('env') === 'development' ? err : {}
   });
 });
+
+const checkExpiration = require('./models/helpers/card-event-helper');
 
 if (require.main === module) {
   mongoose

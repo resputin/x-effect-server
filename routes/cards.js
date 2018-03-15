@@ -7,9 +7,12 @@ const { Card } = require('../models/card');
 const { CardEvent } = require('../models/card-event');
 const mongoose = require('mongoose');
 const moment = require('moment');
+const passport = require('passport');
+
+router.use(passport.authenticate('jwt', { session: false, failWithError: true }));
 
 router.get('/', (req, res, next) => {
-  Card.find().populate('cardEvents')
+  Card.find({ userId: req.user.id}).populate('cardEvents')
     .then(response => {
       res.json(response);
     })

@@ -13,6 +13,10 @@ router.post('/users', (req, res, next) => {
     password: {
       min: 8,
       max: 72
+    },
+    email: {
+      min: 5,
+      max: 72
     }
   };
 
@@ -96,3 +100,5 @@ router.post('/users', (req, res, next) => {
       next(err);
     });
 });
+
+module.exports = router;

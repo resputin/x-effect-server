@@ -62,7 +62,7 @@ if (require.main === module) {
 
   app
     .listen(PORT, function() {
-      setInterval(() => checkExpiration(), 15000 * 60 );
+      setInterval(() => checkExpiration(), 5000 * 60 );
       console.info(`Server listening on ${this.address().port}`);
     })
     .on('error', err => {

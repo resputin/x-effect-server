@@ -4,11 +4,13 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const app = express();
-const { Card } = require('./models/card');
+const passport = require('passport');
 const mongoose = require('mongoose');
 const { MONGODB_URI, PORT, CLIENT_ORIGIN } = require('./config');
 const cardRouter = require('./routes/cards');
 const cardEventRouter = require('./routes/cardEvents');
+const usersRouter = require('./routes/users');
+const authRouter = require('./routes/auth');
 const checkExpiration = require('./models/helpers/card-event-helper');
 
 app.use(
@@ -23,7 +25,17 @@ app.use(
   })
 );
 
+const localStrategy = require('./passport/local');
+const jwtStrategy = require('./passport/jwt');
+passport.use(localStrategy);
+passport.use(jwtStrategy);
+
 app.use(express.json());
+
+app.use('', usersRouter);
+app.use('', authRouter);
+
+app.use(passport.authenticate('jwt', { session: false, failWithError: true }));
 
 app.use('/api/cards', cardRouter);
 app.use('/api/cardEvents', cardEventRouter);

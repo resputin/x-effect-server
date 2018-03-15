@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const cardSchema = mongoose.Schema({
   name: { type: String, required: true },
   created: { type: Date, default: Date.now() },
+  userId: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
   cardEvents: [{ type: mongoose.Schema.Types.ObjectId, ref: 'CardEvent'}]
 });
 

@@ -5,14 +5,16 @@ const express = require('express');
 const router = express.Router();
 const { Card } = require('../models/card');
 const { CardEvent } = require('../models/card-event');
-const mongoose = require('mongoose');
 const moment = require('moment');
 const passport = require('passport');
 
-router.use(passport.authenticate('jwt', { session: false, failWithError: true }));
+router.use(
+  passport.authenticate('jwt', { session: false, failWithError: true })
+);
 
 router.get('/', (req, res, next) => {
-  Card.find({ userId: req.user.id}).populate('cardEvents')
+  Card.find({ userId: req.user.id })
+    .populate('cardEvents')
     .then(response => {
       res.json(response);
     })
@@ -50,11 +52,11 @@ router.post('/', (req, res, next) => {
     })
     .then(response => {
       let eventIds = response.map(event => event.id);
-      console.log(eventIds);
-      return Card.findByIdAndUpdate(response[0].cardId, {cardEvents: eventIds});
+      return Card.findByIdAndUpdate(response[0].cardId, {
+        cardEvents: eventIds
+      });
     })
     .then(response => {
-      console.log(response);
       if (response) {
         return Card.findById(response.id).populate('cardEvents');
       } else {
@@ -81,35 +83,16 @@ router.put('/:id', (req, res, next) => {
       updateCard[field] = req.body[field];
     }
   }
-
-  if (req.body.xArray) {
-    Card.findById(req.params.id)
-      .then(response => {
-        updateCard.xArray = [...response.xArray, req.body.xArray];
-        console.log(updateCard);
-        return Card.findByIdAndUpdate(req.params.id, updateCard, { new: true });
-      })
-      .then(response => {
-        console.log(response);
-        if (response) {
-          res.json(response);
-        } else {
-          console.log('here');
-          next();
-        }
-      })
-      .catch(next);
-  } else {
-    Card.findByIdAndUpdate(req.params.id, updateCard, { new: true })
-      .then(response => {
-        if (response) {
-          res.json(response);
-        } else {
-          next();
-        }
-      })
-      .catch(next);
-  }
+  
+  Card.findByIdAndUpdate(req.params.id, updateCard, { new: true })
+    .then(response => {
+      if (response) {
+        res.json(response);
+      } else {
+        next();
+      }
+    })
+    .catch(next);
 });
 
 module.exports = router;

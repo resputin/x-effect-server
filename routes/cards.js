@@ -32,20 +32,21 @@ router.post('/', (req, res, next) => {
 
   const newCard = {
     name: req.body.name,
-    userId: req.user.id,
-    created: Date.now()
+    userId: req.user.id
   };
 
   Card.create(newCard)
     .then(response => {
-      const created = moment(response.created);
+      const created = moment(response.created)
+        .startOf('day')
+        .add(7, 'hours');
       const cardId = response.id;
       const eventPromises = [];
       for (let i = 0; i < 49; i++) {
         eventPromises.push(
           CardEvent.create({
             cardId,
-            expires: created.startOf('day').add(1, 'days')
+            expires: created.add(1, 'days')
           })
         );
       }

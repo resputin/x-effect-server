@@ -37,7 +37,6 @@ router.post('/', (req, res, next) => {
 
   Card.create(newCard)
     .then(response => {
-      console.log(response);
       const created = moment(response.created)
         .startOf('day');
       const cardId = response.id;

@@ -21,7 +21,7 @@ router.post('/', (req, res, next) => {
           cardId: event.cardId,
           userId: req.user.id,
           cardEventId: event.id,
-          body: 'You still haven\'t checked off your card for today'
+          body: req.body.message
         }));
       });
       return Promise.all(notifications);

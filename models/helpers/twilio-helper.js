@@ -12,19 +12,20 @@ function sendNotifications() {
   CardNotification.find({ sendTime: { $lt: Date.now() }, status: 'NOT_SENT' })
     .populate('cardEventId')
     .then(response => {
-      console.log(response[0].cardEventId.status);
-      const notificationsPending = [];
-      response.forEach(notification => {
-        if (notification.cardEventId.status === 'NOT_CHECKED')
-          notificationsPending.push(
-            client.messages.create({
-              body: notification.body,
-              to: `+1${notification.sendTo}`,
-              from: '+17606426357'
-            })
-          );
-      });
-      return Promise.all(notificationsPending);
+      if (response) {
+        const notificationsPending = [];
+        response.forEach(notification => {
+          if (notification.cardEventId.status === 'NOT_CHECKED')
+            notificationsPending.push(
+              client.messages.create({
+                body: notification.body,
+                to: `+1${notification.sendTo}`,
+                from: '+17606426357'
+              })
+            );
+        });
+        return Promise.all(notificationsPending);
+      }
     })
     .then(response => {
       return CardNotification.updateMany(

@@ -17,7 +17,7 @@ router.post('/', (req, res, next) => {
       response.forEach(event => {
         notifications.push(CardNotification.create({
           sendTime: moment(event.expires).subtract(req.body.minutesUntilExpire, 'minutes'),
-          sendTo: '6197278112',
+          sendTo: req.body.sendTo,
           cardId: event.cardId,
           userId: req.user.id,
           cardEventId: event.id,

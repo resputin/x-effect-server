@@ -37,9 +37,9 @@ router.post('/', (req, res, next) => {
 
   Card.create(newCard)
     .then(response => {
+      console.log(response);
       const created = moment(response.created)
-        .startOf('day')
-        .add(7, 'hours');
+        .startOf('day');
       const cardId = response.id;
       const eventPromises = [];
       for (let i = 0; i < 49; i++) {

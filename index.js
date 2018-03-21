@@ -88,6 +88,8 @@ if (require.main === module) {
     });
 }
 
+module.exports = app;
+
 /**
  * start timer loop with setInterval after app starts up
  * setInterval on a short timer to check buisness logic

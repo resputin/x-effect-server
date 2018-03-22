@@ -32,12 +32,12 @@ router.post('/', (req, res, next) => {
 
   const newCard = {
     name: req.body.name,
-    userId: req.user.id
+    userId: req.user.id,
+    created: req.body.created
   };
 
   Card.create(newCard)
     .then(response => {
-      console.log(response);
       const created = moment(response.created)
         .startOf('day');
       const cardId = response.id;
@@ -71,30 +71,30 @@ router.post('/', (req, res, next) => {
     .catch(next);
 });
 
-router.put('/:id', (req, res, next) => {
-  if (req.body.id !== req.params.id) {
-    const err = new Error('Id must match in body and url params');
-    err.status = 400;
-    return next(err);
-  }
+// router.put('/:id', (req, res, next) => {
+//   if (req.body.id !== req.params.id) {
+//     const err = new Error('Id must match in body and url params');
+//     err.status = 400;
+//     return next(err);
+//   }
 
-  const acceptedFields = ['name'];
-  const updateCard = {};
-  for (let field in acceptedFields) {
-    if (req.body[field]) {
-      updateCard[field] = req.body[field];
-    }
-  }
+//   const acceptedFields = ['name'];
+//   const updateCard = {};
+//   for (let field in acceptedFields) {
+//     if (req.body[field]) {
+//       updateCard[field] = req.body[field];
+//     }
+//   }
   
-  Card.findByIdAndUpdate(req.params.id, updateCard, { new: true })
-    .then(response => {
-      if (response) {
-        res.json(response);
-      } else {
-        next();
-      }
-    })
-    .catch(next);
-});
+//   Card.findByIdAndUpdate(req.params.id, updateCard, { new: true })
+//     .then(response => {
+//       if (response) {
+//         res.json(response);
+//       } else {
+//         next();
+//       }
+//     })
+//     .catch(next);
+// });
 
 module.exports = router;

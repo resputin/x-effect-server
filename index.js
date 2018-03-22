@@ -6,6 +6,7 @@ const morgan = require('morgan');
 const app = express();
 const passport = require('passport');
 const mongoose = require('mongoose');
+const moment = require('moment');
 const { MONGODB_URI, PORT, CLIENT_ORIGIN } = require('./config');
 
 app.use(
@@ -31,12 +32,14 @@ const cardRouter = require('./routes/cards');
 const cardEventRouter = require('./routes/cardEvents');
 const usersRouter = require('./routes/users');
 const authRouter = require('./routes/auth');
+const notificationRouter = require('./routes/cardNotifications');
 
 app.use('/api', usersRouter);
 app.use('/api', authRouter);
 
 app.use('/api/cards', cardRouter);
 app.use('/api/cardEvents', cardEventRouter);
+app.use('/api/notifications', notificationRouter);
 
 app.use(function(req, res, next) {
   const err = new Error('Not Found');
@@ -56,6 +59,7 @@ app.use(function(err, req, res, next) {
 });
 
 const checkExpiration = require('./models/helpers/card-event-helper');
+const sendNotifications = require('./models/helpers/twilio-helper');
 
 if (require.main === module) {
   mongoose
@@ -74,13 +78,19 @@ if (require.main === module) {
 
   app
     .listen(PORT, function() {
-      setInterval(() => checkExpiration(), 5000 * 60 );
+      setInterval(() => {
+        console.log(moment());
+        checkExpiration();
+        sendNotifications();
+      }, 5000);
       console.info(`Server listening on ${this.address().port}`);
     })
     .on('error', err => {
       console.error(err);
     });
 }
+
+module.exports = app;
 
 /**
  * start timer loop with setInterval after app starts up

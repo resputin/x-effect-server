@@ -6,6 +6,7 @@ const morgan = require('morgan');
 const app = express();
 const passport = require('passport');
 const mongoose = require('mongoose');
+const moment = require('moment');
 const { MONGODB_URI, PORT, CLIENT_ORIGIN } = require('./config');
 
 app.use(
@@ -78,6 +79,7 @@ if (require.main === module) {
   app
     .listen(PORT, function() {
       setInterval(() => {
+        console.log(moment());
         checkExpiration();
         sendNotifications();
       }, 5000);

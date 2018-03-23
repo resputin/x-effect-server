@@ -6,7 +6,6 @@ const morgan = require('morgan');
 const app = express();
 const passport = require('passport');
 const mongoose = require('mongoose');
-const moment = require('moment');
 const { MONGODB_URI, PORT, CLIENT_ORIGIN } = require('./config');
 
 app.use(
@@ -15,12 +14,14 @@ app.use(
   })
 );
 
+// Use cors to only allow client to access API
 app.use(
   cors({
     origin: CLIENT_ORIGIN
   })
 );
 
+// Using local strategy for initial log in and JWT for persistence
 const localStrategy = require('./passport/local');
 const jwtStrategy = require('./passport/jwt');
 passport.use(localStrategy);
@@ -76,13 +77,16 @@ if (require.main === module) {
       console.error(err);
     });
 
+  /**
+   * The interval timer here will run once every 5 minutes and check if a card has expired.
+   * It also will check to see if there are any notifications that need to be sent.
+   */
   app
     .listen(PORT, function() {
       setInterval(() => {
-        console.log(moment());
         checkExpiration();
         sendNotifications();
-      }, 5000);
+      }, 5000 * 60);
       console.info(`Server listening on ${this.address().port}`);
     })
     .on('error', err => {
@@ -91,24 +95,3 @@ if (require.main === module) {
 }
 
 module.exports = app;
-
-/**
- * start timer loop with setInterval after app starts up
- * setInterval on a short timer to check buisness logic
- * 
- * card: {
- *  name:
- *  createdAt:
- *  xArray: [true, false, true, undecided] => [true, false, true, false, undecided]
- *  hasNotChecked: true
- * }
- * 
- * get all events, that expire today, and are undecided
- * get all events for a card
- * 
- * notification tied to this same event add needsNotification
- * 
- * "NOT_CHECKED"
- * "MISSED"
- * "COMPLETED"
- */

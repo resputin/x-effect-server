@@ -1,8 +1,14 @@
 'use strict';
-
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
+/**
+ * User Model:
+ *  Email: works as the username so it must be unique
+ *  Name: Currently unused but will be required for additional
+ *        features
+ *  Password: Hash created by bcrypt
+ */
 const userSchema = mongoose.Schema({
   email: { type: String, required: true, unique: true },
   name: { type: String, required: true },

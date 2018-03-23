@@ -1,5 +1,4 @@
 'use strict';
-const express = require('express');
 const app = require('../index');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
@@ -84,49 +83,7 @@ describe('Before and After Hooks', function() {
         })
         .then(response => {
           expect(response).to.equal(49);
-        })
-        .catch(err => {
-          // console.log(err);
         });
     });
-
-    // it('should 400 error when not all fields are present', function() {
-    //   let newItem = { content: 'I am a cat' };
-    //   let spy = chai.spy();
-    //   return chai
-    //     .request(app)
-    //     .post('/api/cards')
-    //     .set('authorization', `Bearer ${token}`)
-    //     .send(newItem)
-    //     .then(spy)
-    //     .catch(err => {
-    //       const res = err.response;
-    //       expect(res).to.have.status(400);
-    //       expect(res.body.message).to.equal('Must include name');
-    //     })
-    //     .then(() => {
-    //       expect(spy).to.not.have.been.called();
-    //     });
-    // });
-
-    // it('should catch errors and respond properly', function() {
-    //   const spy = chai.spy();
-    //   let newItem = {
-    //     name: 'CATS'
-    //   };
-    //   sandbox.stub(express.response, 'json').throws('TypeError');
-    //   return chai
-    //     .request(app)
-    //     .post('/api/cards')
-    //     .set('authorization', `Bearer ${token}`)
-    //     .send(newItem)
-    //     .then(spy)
-    //     .catch(err => {
-    //       expect(err).to.have.status(500);
-    //     })
-    //     .then(() => {
-    //       expect(spy).to.not.have.been.called();
-    //     });
-    // });
   });
 });

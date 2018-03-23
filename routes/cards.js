@@ -1,13 +1,15 @@
 'use strict';
 
 const express = require('express');
-// Create an router instance (aka "mini-router")
 const router = express.Router();
 const { Card } = require('../models/card');
 const { CardEvent } = require('../models/card-event');
 const moment = require('moment');
 const passport = require('passport');
 
+/**
+ * Router uses JWT to protect all endpoints here.
+ */
 router.use(
   passport.authenticate('jwt', { session: false, failWithError: true })
 );
@@ -36,10 +38,15 @@ router.post('/', (req, res, next) => {
     created: req.body.created
   };
 
+  /**
+   * Card gets created and then this creation will also create all of the CardEvents
+   * that accompany this card. Look at models for more information on how this works.
+   * A lot of work to create multiple things and properly set up references to all the
+   * other models.
+   */
   Card.create(newCard)
     .then(response => {
-      const created = moment(response.created)
-        .startOf('day');
+      const created = moment(response.created).startOf('day');
       const cardId = response.id;
       const eventPromises = [];
       for (let i = 0; i < 49; i++) {
@@ -70,31 +77,5 @@ router.post('/', (req, res, next) => {
     })
     .catch(next);
 });
-
-// router.put('/:id', (req, res, next) => {
-//   if (req.body.id !== req.params.id) {
-//     const err = new Error('Id must match in body and url params');
-//     err.status = 400;
-//     return next(err);
-//   }
-
-//   const acceptedFields = ['name'];
-//   const updateCard = {};
-//   for (let field in acceptedFields) {
-//     if (req.body[field]) {
-//       updateCard[field] = req.body[field];
-//     }
-//   }
-  
-//   Card.findByIdAndUpdate(req.params.id, updateCard, { new: true })
-//     .then(response => {
-//       if (response) {
-//         res.json(response);
-//       } else {
-//         next();
-//       }
-//     })
-//     .catch(next);
-// });
 
 module.exports = router;

@@ -1,7 +1,5 @@
 'use strict';
-
 const mongoose = require('mongoose');
-
 const { Card } = require('../models/card');
 const { CardEvent } = require('../models/card-event');
 const { User } = require('../models/user');
@@ -9,7 +7,7 @@ const seedEvents = require('../db/seed/cardEvents');
 const seedCards = require('../db/seed/cards');
 const seedUsers = require('../db/seed/users.json');
 const { MONGODB_URI } = require('../config');
-// Put in mongo db uri here once its created
+
 mongoose
   .connect(MONGODB_URI)
   .then(() => mongoose.connection.db.dropDatabase())

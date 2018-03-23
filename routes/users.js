@@ -5,6 +5,9 @@ const router = express.Router();
 const { User } = require('../models/user');
 
 router.post('/users', (req, res, next) => {
+  /**
+   * A lot of validators for the user API endpoint.
+   */
   const { name, email, password } = req.body;
   const lengthValidation = {
     name: {
@@ -76,7 +79,10 @@ router.post('/users', (req, res, next) => {
     );
     return next(err);
   }
-
+  /**
+   * Hash password and then create the user with hashed password.
+   * Handles async errors from database validation as well.
+   */
   return User.hashPassword(password)
     .then(digest => {
       const newUser = { name, email, password: digest };

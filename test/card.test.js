@@ -184,9 +184,6 @@ describe('Before and After Hooks', function() {
         })
         .then(response => {
           expect(response).to.equal(2);
-        })
-        .catch(err => {
-          // console.log(err);
         });
     });
 

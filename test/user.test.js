@@ -1,5 +1,4 @@
 'use strict';
-const express = require('express');
 const app = require('../index');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
@@ -64,7 +63,11 @@ describe('Before and After Hooks', function() {
 
   describe('POST /users', function() {
     it('should create a new user with valid credentials', function() {
-      let newUser = { name: 'tim', password: 'timmyturner', email: 'timmy@turner.com' };
+      let newUser = {
+        name: 'tim',
+        password: 'timmyturner',
+        email: 'timmy@turner.com'
+      };
       return chai
         .request(app)
         .post('/api/users')
@@ -85,7 +88,9 @@ describe('Before and After Hooks', function() {
         .then(spy)
         .catch(err => {
           expect(err).to.have.status(422);
-          expect(err.response.body.message).to.equal('Missing password in request body');
+          expect(err.response.body.message).to.equal(
+            'Missing password in request body'
+          );
         })
         .then(() => {
           expect(spy).to.have.not.been.called;
@@ -94,7 +99,11 @@ describe('Before and After Hooks', function() {
 
     it('should return a 422 error when a field is not a string', function() {
       let spy = chai.spy();
-      let newUser = { name: 'tim', password: 1234456789, email: 'timmy@turner.com' };
+      let newUser = {
+        name: 'tim',
+        password: 1234456789,
+        email: 'timmy@turner.com'
+      };
       return chai
         .request(app)
         .post('/api/users')
@@ -102,7 +111,9 @@ describe('Before and After Hooks', function() {
         .then(spy)
         .catch(err => {
           expect(err).to.have.status(422);
-          expect(err.response.body.message).to.equal('password must be a string');
+          expect(err.response.body.message).to.equal(
+            'password must be a string'
+          );
         })
         .then(() => {
           expect(spy).to.have.not.been.called;
@@ -111,7 +122,11 @@ describe('Before and After Hooks', function() {
 
     it('should return a 422 error when a field has leading or trailing whitespace', function() {
       let spy = chai.spy();
-      let newUser = { name: 'tim', password: ' 1234456789', email: 'timmy@turner.com' };
+      let newUser = {
+        name: 'tim',
+        password: ' 1234456789',
+        email: 'timmy@turner.com'
+      };
       return chai
         .request(app)
         .post('/api/users')
@@ -119,7 +134,9 @@ describe('Before and After Hooks', function() {
         .then(spy)
         .catch(err => {
           expect(err).to.have.status(422);
-          expect(err.response.body.message).to.equal('password must not have any leading or trailing whitespace');
+          expect(err.response.body.message).to.equal(
+            'password must not have any leading or trailing whitespace'
+          );
         })
         .then(() => {
           expect(spy).to.have.not.been.called;
@@ -128,7 +145,11 @@ describe('Before and After Hooks', function() {
 
     it('should return a 422 error when a username exists', function() {
       let spy = chai.spy();
-      let newUser = { name: 'bobby', password: '1234456789', email: 'bob@bob.com' };
+      let newUser = {
+        name: 'bobby',
+        password: '1234456789',
+        email: 'bob@bob.com'
+      };
       return chai
         .request(app)
         .post('/api/users')
@@ -136,7 +157,9 @@ describe('Before and After Hooks', function() {
         .then(spy)
         .catch(err => {
           expect(err).to.have.status(400);
-          expect(err.response.body.message).to.equal('That email already exists');
+          expect(err.response.body.message).to.equal(
+            'That email already exists'
+          );
         })
         .then(() => {
           expect(spy).to.have.not.been.called;
@@ -153,7 +176,9 @@ describe('Before and After Hooks', function() {
         .then(spy)
         .catch(err => {
           expect(err).to.have.status(422);
-          expect(err.response.body.message).to.equal('email must be 5 characters or longer');
+          expect(err.response.body.message).to.equal(
+            'email must be 5 characters or longer'
+          );
         })
         .then(() => {
           expect(spy).to.have.not.been.called;
@@ -170,7 +195,9 @@ describe('Before and After Hooks', function() {
         .then(spy)
         .catch(err => {
           expect(err).to.have.status(422);
-          expect(err.response.body.message).to.equal('password must be 8 characters or longer');
+          expect(err.response.body.message).to.equal(
+            'password must be 8 characters or longer'
+          );
         })
         .then(() => {
           expect(spy).to.have.not.been.called;
@@ -179,7 +206,12 @@ describe('Before and After Hooks', function() {
 
     it('should return a 422 error when a password is too long', function() {
       let spy = chai.spy();
-      let newUser = { name: '1', password: '1234kjdfhglkadjfhglksdjhfgklsdjfhgklsdjhfgkljsdfhglkjsdhfglksjhdfglksjdhfglkjsdhfgklsdjhfglakjshdf;sDJKF;KLAHDGKLJAHDFGLKJHDSFLKJDLKVJBALDBJVAUEHRVUHAELRIUHVAERLGHK', email: 'timmy@turner.com' };
+      let newUser = {
+        name: '1',
+        password:
+          '1234kjdfhglkadjfhglksdjhfgklsdjfhgklsdjhfgkljsdfhglkjsdhfglksjhdfglksjdhfglkjsdhfgklsdjhfglakjshdf;sDJKF;KLAHDGKLJAHDFGLKJHDSFLKJDLKVJBALDBJVAUEHRVUHAELRIUHVAERLGHK',
+        email: 'timmy@turner.com'
+      };
       return chai
         .request(app)
         .post('/api/users')
@@ -187,7 +219,9 @@ describe('Before and After Hooks', function() {
         .then(spy)
         .catch(err => {
           expect(err).to.have.status(422);
-          expect(err.response.body.message).to.equal('password must be 72 characters or smaller');
+          expect(err.response.body.message).to.equal(
+            'password must be 72 characters or smaller'
+          );
         })
         .then(() => {
           expect(spy).to.have.not.been.called;

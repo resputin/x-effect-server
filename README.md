@@ -52,6 +52,6 @@ After both repos have been cloned and `mongod` is running
 
 1. CD into both directories in your terminal and `npm install` both.
 2. Create .env files in the root level of both directories.
-  * The client .env needs `REACT_APP_API_BASE_URL='http://localhost:8080/api'` or wherever you expect to run your server from but with `/api` appended to the end
-  * The server .env needs a `JWT_SECRET` and a Twilio user key and token saved as `TWILIO_SID` and `TWILIO_TOKEN`
+    * The client .env needs `REACT_APP_API_BASE_URL='http://localhost:8080/api'` or wherever you expect to run your server from but with `/api` appended to the end
+    * The server .env needs a `JWT_SECRET` and a Twilio user key and token saved as `TWILIO_SID` and `TWILIO_TOKEN`
 3. run `npm start` on both terminal instances
